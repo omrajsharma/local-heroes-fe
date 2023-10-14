@@ -4,6 +4,7 @@ export interface ApiParams {
     method: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE',
     url: string,
     header?: any,
+    credentials?: 'include'
 }
 
 const ApiEnumToParams = (apiEnum: API_ENUM) => {    
@@ -14,6 +15,7 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
             header: {
                 "Content-type": "application/json; charset=UTF-8"
             },
+            credentials: 'include',
         }
         return params
     }

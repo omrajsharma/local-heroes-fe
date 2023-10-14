@@ -14,6 +14,7 @@ const apiCall = async (
             const response = await fetch(params?.url, {
                 method: params.method,
                 headers: params.header,
+                credentials: params.credentials,
                 body: JSON.stringify(body),
             })
 
