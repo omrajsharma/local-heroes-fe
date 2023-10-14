@@ -23,12 +23,21 @@ const apiCall = async (
                 if ( data?.message.length > 0 )
                     AppAlert(AlertTypeEnum.SUCCESS, data?.message);
                 
+                return {
+                    data: data.data,
+                    success: true,
+                }
                 return data.data;
             } else {
                 const data = await response.json();
 
                 if ( data?.error.length > 0 )
                     AppAlert(AlertTypeEnum.ERROR, data?.error);
+
+                return {
+                    data: data.data,
+                    success: false
+                }
             }
         }
     } catch (err) {
