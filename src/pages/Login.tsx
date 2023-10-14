@@ -3,11 +3,15 @@ import Container from "../components/atoms/Container"
 import React from "react";
 import apiCall from "../utils/apiUtils";
 import API_ENUM from "../enum/API_ENUM";
-
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [redirectToHome, setRedirectToHome] = React.useState(false);
+
+  if (redirectToHome)
+    return <Navigate to={'/'} />
 
   const handleUsernameChange = (ev: any) => {
     setUsername(ev.target.value);
@@ -17,8 +21,12 @@ const Login = () => {
     setPassword(ev.target.value);
   };
 
-  const handleSubmit = () => {
-    apiCall(API_ENUM.LOGIN, {username, password});
+  const handleSubmit = async () => {
+    const data = await apiCall(API_ENUM.LOGIN, {username, password});
+    
+    if (data?.success) {
+      setRedirectToHome(true);
+    }
   }
 
   return (
