@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import Container from "../components/atoms/Container";
 import axios from "axios";
+import apiCall from "../utils/apiUtils";
+import API_ENUM from "../enum/API_ENUM";
 
 const Register = () => {
   const [name, setName] = React.useState("");
@@ -47,25 +49,23 @@ const Register = () => {
     setUserType(ev.target.value);
   };
 
-  const handleSubmit = () => {
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+    setPhone("");
+    setUsername("");
+    setPassword("");
+    setUserType("");
+  }
+
+  const handleSubmit = async () => {
     // validation
 
-    // api call
-    try {
-      axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/register`, {
-        name ,
-        email ,
-        phone ,
-        username ,
-        password ,
-        userType 
-      })
-      .then((res) => console.log(res))
+    // api calls
+    const data = await apiCall(API_ENUM.SIGNUP, {name, email, phone, username, password, userType});
 
-    } catch (err) {
-      console.log(err);
-      
-    }
+    if (data?.success)
+      resetForm();
   }
 
   return (

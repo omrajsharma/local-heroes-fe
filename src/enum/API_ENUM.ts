@@ -1,4 +1,5 @@
 enum API_ENUM {
+    SIGNUP,
     LOGIN,
 }
 
