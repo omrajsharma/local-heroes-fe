@@ -21,7 +21,7 @@ const apiCall = async (
             if (response.ok) {
                 const data = await response.json();
 
-                if ( data?.message.length > 0 )
+                if ( data?.message?.length > 0 )
                     AppAlert(AlertTypeEnum.SUCCESS, data?.message);
                 
                 return {
@@ -32,7 +32,7 @@ const apiCall = async (
             } else {
                 const data = await response.json();
 
-                if ( data?.error.length > 0 )
+                if ( data?.error?.length > 0 )
                     AppAlert(AlertTypeEnum.ERROR, data?.error);
 
                 return {
