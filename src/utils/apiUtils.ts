@@ -24,8 +24,8 @@ const apiCall = async (
                     AppAlert(AlertTypeEnum.SUCCESS, data?.message);
                 
                 return {
-                    data: data.data,
                     success: true,
+                    data: data.data,
                 }
                 return data.data;
             } else {
@@ -35,8 +35,8 @@ const apiCall = async (
                     AppAlert(AlertTypeEnum.ERROR, data?.error);
 
                 return {
+                    success: false,
                     data: data.data,
-                    success: false
                 }
             }
         }
