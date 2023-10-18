@@ -1,11 +1,14 @@
 import { Button, Card, FormControl, TextField, Typography } from "@mui/material"
 import Container from "../components/atoms/Container"
-import React from "react";
+import React, { useContext } from "react";
 import apiCall from "../utils/apiUtils";
 import API_ENUM from "../enum/API_ENUM";
 import { Navigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const Login = () => {
+  const { setUserInfo } = useContext(UserContext);
+
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [redirectToHome, setRedirectToHome] = React.useState(false);
@@ -23,8 +26,15 @@ const Login = () => {
 
   const handleSubmit = async () => {
     const data = await apiCall(API_ENUM.LOGIN, {username, password});
-    
+
     if (data?.success) {
+      setUserInfo({
+        userId: data.data.userId,
+        username: data.data.username,
+        email: data.data.email,
+        phone: data.data.phone,
+        type: data.data.type,
+      })
       setRedirectToHome(true);
     }
   }
