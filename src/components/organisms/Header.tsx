@@ -63,9 +63,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const { userInfo } = React.useContext(UserContext);
 
-  console.log(userInfo);
-  
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -129,7 +126,7 @@ export default function Header() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {userInfo ? (
+      {userInfo?.userId ? (
         <>
           <MenuItem>
             <IconButton
@@ -229,7 +226,7 @@ export default function Header() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {userInfo ? (
+            {userInfo?.userId ? (
               <>
                 <IconButton
                   size="large"
