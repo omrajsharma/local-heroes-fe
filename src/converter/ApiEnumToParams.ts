@@ -27,6 +27,20 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
             }
         }
         return params
+    } else if (apiEnum == API_ENUM.GET_USER_INFO) {
+        let params : ApiParams = {
+            method: "GET",
+            url: `${import.meta.env.VITE_BASE_URL}/api/v1/auth/profile`,
+            credentials: 'include'
+        }
+        return params
+    } else if (apiEnum == API_ENUM.LOGOUT) {
+        let params : ApiParams = {
+            method: "GET",
+            url: `${import.meta.env.VITE_BASE_URL}/api/v1/auth/logout`,
+            credentials: 'include'
+        }
+        return params
     }
 }
 

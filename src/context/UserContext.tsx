@@ -1,4 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import apiCall from "../utils/apiUtils";
+import API_ENUM from "../enum/API_ENUM";
 
 interface UserInfo {
     userId: string,
@@ -32,6 +34,21 @@ const UserContextProvider = ({children} : any) => {
         phone: "",
         type: "",
     });
+
+    useEffect(() => {
+        apiCall(API_ENUM.GET_USER_INFO)
+        .then(data => {
+            if (data?.success) {
+                setUserInfo({
+                    userId: data.data.userId,
+                    username: data.data.username,
+                    email: data.data.email,
+                    phone: data.data.phone,
+                    type: data.data.type,
+                })
+            }
+        })
+    },[]);
 
     return (
         <UserContext.Provider value={{userInfo, setUserInfo}}>
