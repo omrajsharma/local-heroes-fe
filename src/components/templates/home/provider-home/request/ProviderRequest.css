@@ -1,0 +1,24 @@
+.provider-request-card {
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.provider-request-card-head {
+    display: flex;
+    justify-content: space-between;
+}
+.provider-request-card-head-left {
+    display: flex;
+    gap: 10px;
+}
+.provider-request-card-head-left-img {
+    width: 66px;
+    height: 66px;
+}
+.provider-request-card-head-left-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 1px solid #cdcdcd;
+}
