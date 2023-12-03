@@ -23,8 +23,8 @@ const ProviderAvailability = () => {
 
 
     return (
-        <div>
-            <FormControl fullWidth>
+        <div style={{ marginTop: '16px', display: "flex", flexDirection: 'column' }}>
+            <FormControl style={{ minWidth: '500px', margin: 'auto' }}>
                 <FormLabel id="demo-radio-buttons-group-label">Select Days</FormLabel>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
