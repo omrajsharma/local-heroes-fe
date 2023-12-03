@@ -13,10 +13,13 @@ import { Button } from '@mui/material';
 
 const ProviderAvailability = () => {
     const today = dayjs();
-    const [formDays, setFormDays] = useState("");
-    const [formStartTime, setFormStartTime] = useState("");
-    const [formEndTime, setFormEndTime] = useState("");
+    const [daysType, setDaysType] = useState("");
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
 
+    // console.log(formStartDay, formEndDay);
 
 
     return (
@@ -28,19 +31,22 @@ const ProviderAvailability = () => {
                     defaultValue="female"
                     name="radio-buttons-group"
                     row
-                    onChange={e => setFormDays(e.target.value)}
+                    onChange={e => setDaysType(e.target.value)}
                 >
                     <FormControlLabel value="ALL_DAYS" control={<Radio />} label="All Days" />
                     <FormControlLabel value="DATE_RANGE" control={<Radio />} label="Select Days" />
                 </RadioGroup>
-                {formDays == 'DATE_RANGE' && (
+                {daysType == 'DATE_RANGE' && (
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                         <DemoContainer components={['DateRangePicker']}>
                             <DateRangePicker
-                                localeText={{ start: 'Check-in', end: 'Check-out' }}
+                                localeText={{ start: 'Start Date', end: 'End Date' }}
                                 minDate={today}
                                 autoFocus
-                                onChange={e => console.log(e[0]?.toDate(), e[1]?.toDate())}
+                                onChange={e => {
+                                    setStartDate(dayjs(e[0]?.toDate()).toDate())
+                                    setEndDate(dayjs(e[1]?.toDate()).toDate())
+                                }}
                             />
                         </DemoContainer>
                     </LocalizationProvider>
@@ -49,12 +55,26 @@ const ProviderAvailability = () => {
                 <div style={{display: 'flex', gap: '16px', marginBottom: '16px'}}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['TimePicker']}>
-                            <TimePicker label="Start Time" onChange={e => console.log(e.valueOf())}/>
+                            <TimePicker 
+                            label="Start Time" 
+                            onChange={(newTime) => {
+                                // Format the selected time in 24-hour format
+                                const formattedTime = dayjs(newTime).format('HH:mm');
+                                setStartTime(formattedTime)
+                            }}/>
                         </DemoContainer>
                     </LocalizationProvider>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['TimePicker']}>
-                            <TimePicker label="End Time" />
+                            <TimePicker 
+                            label="End Time"
+                            disabled={startTime == "" ? true : false}
+                            onChange={(newTime) => {
+                                // Format the selected time in 24-hour format
+                                const formattedTime = dayjs(newTime).format('HH:mm');
+                                setEndTime(formattedTime)
+                            }}
+                            />
                         </DemoContainer>
                     </LocalizationProvider>
                 </div>
