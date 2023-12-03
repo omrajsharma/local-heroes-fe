@@ -3,6 +3,7 @@ import Container from "../../atoms/Container";
 import { useState } from "react";
 import ProviderRequest from "./provider-home/request/ProviderRequest";
 import ProviderAvailability from "./provider-home/availability/ProviderAvailability";
+import ProviderService from "./provider-home/service/ProviderService";
 
 const tabs = ["REQUEST", "AVAILABILITY", "SERVICE"];
 
@@ -26,7 +27,8 @@ const ProviderHome = () => {
         <main className="provider-main">
             { 
               selectedTabIndex == 0 ? <ProviderRequest /> :
-              selectedTabIndex == 1 ? <ProviderAvailability/> : null
+              selectedTabIndex == 1 ? <ProviderAvailability/> : 
+              selectedTabIndex == 2 ? <ProviderService /> : null
             }
         </main>
       </div>
