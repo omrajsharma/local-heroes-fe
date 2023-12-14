@@ -7,7 +7,7 @@ const carouselImages = [
     'https://www.shutterstock.com/image-photo/indian-male-electrical-engineer-doing-260nw-448081306.jpg'
 ]
 
-function HomeCarousel(props)
+function HomeCarousel()
 {
     return (
         <Carousel>
@@ -22,7 +22,7 @@ function Item(props: any)
 {
     return (
         <Paper>
-            <div style={{maxHeight: "450px"}}>
+            <div style={{height: "450px"}}>
                 <img 
                     style={{width: '100%', height: '100%', objectFit: 'cover',}}
                     src={props.imageUrl}
