@@ -5,27 +5,33 @@ import HomeCook from '../../../assets/icons/home_cook.svg'
 import HomeDigital from '../../../assets/icons/home_digital.svg'
 import HomeEducation from '../../../assets/icons/home_education.svg'
 import HomeMisc from '../../../assets/icons/home_misc.svg'
+import { Link } from "react-router-dom"
 
 const categories = [
   {
     element: HomeCook,
-    name: "Home"
+    name: "Home",
+    path: "/home"
   },
   {
     element: HomeBeauty,
-    name: "Beauty and Grooming"
+    name: "Beauty and Grooming",
+    path: "/beauty"
   },
   {
     element: HomeDigital,
-    name: "Technology and Electronics"
+    name: "Technology and Electronics",
+    path: "/techonology"
   },
   {
     element: HomeEducation,
-    name: "Education"
+    name: "Education",
+    path: "/education"
   },
   {
     element: HomeMisc,
-    name: "Other"
+    name: "Other",
+    path: "/other-services"
   },
 ]
 
@@ -41,6 +47,7 @@ const UserHome = () => {
             key={idx} 
             element={category.element} 
             name={category.name}
+            path={category.path}
             />)}
           </div>
         </section>
@@ -50,16 +57,18 @@ const UserHome = () => {
   )
 }
 
-const CategoryCard = ({element, name}: any) => {
+const CategoryCard = ({element, name, path}: any) => {
   return (
     <div style={{width: "45%", maxHeight: '300px', textAlign: "center", marginBottom: "48px", borderRadius: "16px", cursor: "pointer", boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"}} >
-      <img 
-        src={element} 
-        alt="" 
-        style={{width: '100%', height: '100%' }}
-      />
-      <p>{name}</p>
-    </div>
+        <Link to={"/category" + path}>
+        <img 
+          src={element} 
+          alt="" 
+          style={{width: '100%', height: '100%' }}
+        />
+        <p>{name}</p>
+       </Link>
+      </div>
   );
 }
 
