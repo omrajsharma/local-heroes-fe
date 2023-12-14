@@ -4,6 +4,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Button, TextField, Typography } from '@mui/material';
+import apiCall from '../../../../../utils/apiUtils';
+import API_ENUM from '../../../../../enum/API_ENUM';
 
 const ServiceCategories = {
     HOME_SERVICES: 'Home Service',
@@ -35,6 +37,12 @@ const ProviderService = () => {
     const handleDescriptionChange = (ev: any) => {
         setDescription(ev.target.value);
     };
+
+    const handleFormSubmit = async () => {
+        console.log('handlesubmit');
+        const data = await apiCall(API_ENUM.PROVIDER_ADD_SERVICE, {serviceType, title, description, price});
+        
+    }
 
     return (
         <div style={{ marginTop: '16px', display: "flex", flexDirection: 'column' }}>
@@ -86,7 +94,7 @@ const ProviderService = () => {
                     value={description}
                     onChange={handleDescriptionChange}
                 />
-                <Button variant='contained'>
+                <Button variant='contained' onClick={handleFormSubmit}>
                     Add Service
                 </Button>
             </FormControl>

@@ -41,6 +41,13 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
             credentials: 'include'
         }
         return params
+    } else if (apiEnum == API_ENUM.PROVIDER_ADD_SERVICE) {
+        let params: ApiParams = {
+            method: "POST",
+            url: `${import.meta.env.VITE_BASE_URL}/api/v1/provider/service`,
+            credentials: 'include'
+        }
+        return params
     }
 }
 

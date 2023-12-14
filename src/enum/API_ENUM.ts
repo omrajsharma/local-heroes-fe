@@ -3,6 +3,8 @@ enum API_ENUM {
     LOGIN,
     GET_USER_INFO,
     LOGOUT,
+    PROVIDER_ADD_SERVICE,
+    PROVIDER_UPDATE_AVAILABILITY,
 }
 
 export default API_ENUM;
