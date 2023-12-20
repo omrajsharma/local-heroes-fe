@@ -45,6 +45,9 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
         let params: ApiParams = {
             method: "POST",
             url: `${import.meta.env.VITE_BASE_URL}/api/v1/provider/service`,
+            header: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
             credentials: 'include'
         }
         return params
