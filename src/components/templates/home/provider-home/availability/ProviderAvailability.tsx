@@ -10,6 +10,8 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { Button } from '@mui/material';
+import apiCall from '../../../../../utils/apiUtils';
+import API_ENUM from '../../../../../enum/API_ENUM';
 
 const ProviderAvailability = () => {
     const today = dayjs();
@@ -19,8 +21,9 @@ const ProviderAvailability = () => {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
 
-    // console.log(formStartDay, formEndDay);
-
+    const handleSubmit = async () => {
+        const data = await apiCall(API_ENUM.PROVIDER_UPDATE_AVAILABILITY , {daysType, startDate, endDate, startTime, endTime})
+    }
 
     return (
         <div style={{ marginTop: '16px', display: "flex", flexDirection: 'column' }}>
@@ -79,10 +82,8 @@ const ProviderAvailability = () => {
                     </LocalizationProvider>
                 </div>
 
-                <Button variant='contained' >Submit</Button>
+                <Button variant='contained' onClick={handleSubmit}>Submit</Button>
             </FormControl>
-
-
         </div>
     );
 }

@@ -51,6 +51,16 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
             credentials: 'include'
         }
         return params
+    } else if (apiEnum == API_ENUM.PROVIDER_UPDATE_AVAILABILITY) {
+        let params: ApiParams = {
+            method: "PUT",
+            url: `${import.meta.env.VITE_BASE_URL}/api/v1/provider/availability`,
+            header: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            credentials: 'include'
+        }
+        return params
     }
 }
 
