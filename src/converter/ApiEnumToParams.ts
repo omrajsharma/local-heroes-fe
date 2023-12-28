@@ -7,7 +7,7 @@ export interface ApiParams {
     credentials?: 'include'
 }
 
-const ApiEnumToParams = (apiEnum: API_ENUM) => {    
+const ApiEnumToParams = (apiEnum: API_ENUM) => {
     if (apiEnum == API_ENUM.LOGIN) {
         let params : ApiParams = {
             method: "POST",
@@ -58,6 +58,13 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
             header: {
                 "Content-type": "application/json; charset=UTF-8"
             },
+            credentials: 'include'
+        }
+        return params
+    } else if(apiEnum == API_ENUM.PROVIDERS_BY_CATEGORY) {
+        let params : ApiParams = {
+            method: "GET",
+            url: `${import.meta.env.VITE_BASE_URL}/api/v1/client/providers`,
             credentials: 'include'
         }
         return params

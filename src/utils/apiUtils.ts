@@ -5,13 +5,16 @@ import { AlertTypeEnum } from "./alertUtils";
 
 const apiCall = async (
     API_ENUM: API_ENUM,
-    body?: any
+    body?: any,
+    query?: string
 ) => {
     const params = ApiEnumToParams(API_ENUM);
 
     try {
         if (params?.url) {
-            const response = await fetch(params?.url, {
+            debugger
+            const url = params.url + (query ? query : '');
+            const response = await fetch(url, {
                 method: params.method,
                 headers: params.header,
                 credentials: params.credentials,
@@ -20,7 +23,6 @@ const apiCall = async (
 
             if (response.ok) {
                 const responseData = await response.json();
-
                 if ( responseData?.message?.length > 0 )
                     AppAlert(AlertTypeEnum.SUCCESS, responseData?.message);
                 
