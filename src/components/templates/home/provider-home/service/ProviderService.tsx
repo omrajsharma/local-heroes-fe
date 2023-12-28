@@ -41,7 +41,12 @@ const ProviderService = () => {
     const handleFormSubmit = async () => {
         console.log('handlesubmit');
         const data = await apiCall(API_ENUM.PROVIDER_ADD_SERVICE, {serviceType, title, description, price});
-        
+        if (data?.success) {
+            setServiceType("")
+            setTitle("")
+            setPrice("")
+            setDescription("")
+        }
     }
 
     return (
