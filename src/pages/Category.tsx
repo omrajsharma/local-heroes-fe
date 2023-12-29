@@ -1,10 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import Container from '../components/atoms/Container';
 import apiCall from '../utils/apiUtils';
 import API_ENUM from '../enum/API_ENUM';
+import { UserContext } from '../context/UserContext';
+import { Box, Button, Modal, Tooltip, Typography } from '@mui/material';
 
 const colorPelette = ["#cdb4db", "#ffc8dd", "#ffafcc", "#bde0fe", "#a2d2ff"]
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 const paramToCategoryEnum = (param: string | undefined) => {
     switch(param) {
@@ -51,8 +65,9 @@ interface Availability {
 
 const Category = () => {
     const {categoryName} = useParams()
-
     const [providerList, setProviderList] = useState<ProviderList>([]);
+    console.log(providerList);
+    
 
     const getProviders = async () => {
         const categoryEnum = paramToCategoryEnum(categoryName)
@@ -67,27 +82,115 @@ const Category = () => {
   return (
         <Container maxWidth='sm'>
             <div>
-                { providerList.map((provider, idx) => <ProviderCard key={idx} idx={idx} name={provider.name} service={'testing'} price={'testing'} /> ) }
+                { providerList.map((provider, idx) => 
+                    <ProviderCard 
+                        key={idx} 
+                        idx={idx} 
+                        name={provider.name} 
+                        phoneNumber={provider.phone} 
+                        services={provider.services}
+                        availability={provider.availability}
+                    /> 
+                )}
             </div>
         </Container>
   )
 }
 
-const ProviderCard = ({idx, name, service, price}: any) => {
+const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => {
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const [showService, setShowService] = useState(false);
     const nameBgColor = colorPelette[idx % 5];
+    console.log(availability);
+
+    const handleUserServiceSelection = () => {
+        handleOpen();
+    }
     
     return (
-        <div style={{display: "flex", justifyContent: "space-between", padding: "16px", borderRadius: "16px", marginBottom: "16px", boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"}}>
-            <div style={{display: "flex", gap: "16px"}}>
-                <div style={{fontSize: "38px", fontWeight: "bold", width: "48px", height: "48px", display: 'flex', justifyContent: "center", alignItems: "center", borderRadius: "50%", background: nameBgColor}}>
-                    {name[0].toUpperCase()}
+        <div>
+            <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", borderRadius: "16px", marginBottom: "16px", boxShadow: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px", cursor: "pointer", color: "#464646"}}
+                onClick={() => setShowService(!showService)}
+            >
+                <div style={{display: "flex", gap: "16px", alignItems: "center"}}>
+                    <div style={{fontSize: "28px", fontWeight: "bold", width: "38px", height: "38px", display: 'flex', justifyContent: "center", alignItems: "center", borderRadius: "50%", background: nameBgColor}}>
+                        {name[0].toUpperCase()}
+                    </div>
+                    <div>
+                        <p style={{fontSize: "22px", fontWeight: "bold"}}>{name}
+                            {   availability == undefined && 
+                                <Tooltip title="Provider availability is not present in the system. Please contact and confirm" arrow>
+                                    <span style={{fontSize: "16px", color: "#00f",}}> ⓘ</span>
+                                </Tooltip>
+                            }
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <p style={{fontSize: "22px", fontWeight: "bold"}}>{name}</p>
-                    <p>{service}</p>
-                </div>
+                <div style={{fontSize: "22px", fontWeight: "bold"}}>{phoneNumber} ☎️ </div>
             </div>
-            <div style={{fontSize: "28px", fontWeight: "bold"}}>{price} /-</div>
+
+            {showService && services.map(( service: any, idx: number ) => 
+                <ServiceCard 
+                    key={idx} 
+                    service={service}
+                    handleUserServiceSelection={handleUserServiceSelection}
+                />
+            )}
+
+            <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            >
+            <Box sx={style}>
+                {   availability == undefined && (
+                    <div>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Provider availability is not present
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Please confirm by contacting provider on this number <a href={"tel:" + phoneNumber}>{phoneNumber}</a>
+                        </Typography>
+                    </div>
+                )}
+            </Box>
+            </Modal>
+        </div>
+    )
+}
+
+const ServiceCard = ({ service, handleUserServiceSelection }: any) => {
+    const { userInfo, setUserInfo } = useContext(UserContext);
+    const [navigateState, setNavigateState] = useState(false);
+    const navigate = useNavigate();
+
+    if (navigateState)
+        navigate("/login")
+
+    const handleServiceCardClick = () => {
+        if (userInfo.userId == '') {
+            setNavigateState(!navigateState);
+            return;
+        }
+        handleUserServiceSelection();
+    }
+    
+    return (
+        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <div 
+                style={{ width: '95%', display: 'flex', justifyContent: 'space-between', padding: '12px', marginBottom: '12px', boxShadow: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px", cursor: "pointer"}}
+                onClick={handleServiceCardClick}
+            >
+                <div>
+                    <p style={{fontSize: '18px'}}>{service.title}</p>
+                    <p style={{fontSize: '14px', color: '#565656'}}>{service.description}</p>
+                </div>
+                <div>{service.price}/-</div>
+            </div>
         </div>
     )
 }
