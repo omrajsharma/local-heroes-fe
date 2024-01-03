@@ -5,6 +5,10 @@ import apiCall from '../utils/apiUtils';
 import API_ENUM from '../enum/API_ENUM';
 import { UserContext } from '../context/UserContext';
 import { Box, Button, Modal, Tooltip, Typography } from '@mui/material';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const colorPelette = ["#cdb4db", "#ffc8dd", "#ffafcc", "#bde0fe", "#a2d2ff"]
 
@@ -15,9 +19,9 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    borderRadius: 4
 };
 
 const paramToCategoryEnum = (param: string | undefined) => {
@@ -101,15 +105,19 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    const [showService, setShowService] = useState(false);
-    const nameBgColor = colorPelette[idx % 5];
-    console.log(availability);
-
     const handleUserServiceSelection = () => {
         handleOpen();
     }
-    
+
+    const [showService, setShowService] = useState(false);
+    const nameBgColor = colorPelette[idx % 5];
+    const availabilityEndDate = availability?.endDate == undefined ? undefined : new Date(availability?.endDate);
+    const [bookingStep, setBookingStep] = useState(1);
+    const [selectedDate, setSelectedDate] = useState();
+    const [selectedStartTime, setSelectedStartTime] = useState("");
+    const [selectedEndTime, setSelectedEndTime] = useState("");
+
+
     return (
         <div>
             <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", borderRadius: "16px", marginBottom: "16px", boxShadow: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px", cursor: "pointer", color: "#464646"}}
@@ -146,18 +154,73 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             >
-            <Box sx={style}>
-                {   availability == undefined && (
-                    <div>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Provider availability is not present
-                        </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Please confirm by contacting provider on this number <a href={"tel:" + phoneNumber}>{phoneNumber}</a>
-                        </Typography>
-                    </div>
-                )}
-            </Box>
+                <Box sx={style}>
+                    {   availability == undefined ? (
+                        <div>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Provider availability is not present
+                            </Typography>
+                            <Typography id="modal-modal-description" sx={{ my: 2 }}>
+                                Please confirm by contacting provider on this number <a href={"tel:" + phoneNumber}>{phoneNumber}</a>
+                            </Typography>
+                            <Button variant='contained' onClick={handleClose}>Close</Button>
+                        </div>) :
+                        (<div>
+                            {   bookingStep == 1 && (
+                                <>
+                                    <Typography id="modal-modal-title" variant="h5" component="h2" fontWeight={500}>
+                                        Select the time slot
+                                    </Typography>
+                                    <div style={{margin: "16px 0"}}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DatePicker 
+                                                disablePast
+                                                // maxDate={}
+                                                value={selectedDate}
+                                                onChange={e => setSelectedDate(e)}
+                                            />
+                                        </LocalizationProvider>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DemoContainer components={['TimePicker']}>
+                                                <TimePicker 
+                                                label="Start Time" 
+                                                onChange={(newTime) => {
+                                                    // Format the selected time in 24-hour format
+                                                    const formattedTime = dayjs(newTime).format('HH:mm');
+                                                    setSelectedStartTime(formattedTime)
+                                                }}/>
+                                            </DemoContainer>
+                                        </LocalizationProvider>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DemoContainer components={['TimePicker']}>
+                                                <TimePicker 
+                                                label="End Time"
+                                                // disabled={startTime == "" ? true : false}
+                                                onChange={(newTime) => {
+                                                    // Format the selected time in 24-hour format
+                                                    const formattedTime = dayjs(newTime).format('HH:mm');
+                                                    setSelectedEndTime(formattedTime)
+                                                }}
+                                                />
+                                            </DemoContainer>
+                                        </LocalizationProvider>
+                                    </div>
+                                    <Button 
+                                        variant='contained'
+                                        disabled={selectedStartTime == "" || selectedEndTime == "" || selectedDate == undefined}
+                                        onClick={() => setBookingStep(bookingStep + 1)}
+                                    >
+                                        Continue
+                                    </Button>
+                                </>
+                            )}
+                            {   bookingStep == 2 && (
+                                <div>step 2</div>
+                            )}
+                            
+                        </div>)
+                    }
+                </Box>
             </Modal>
         </div>
     )
