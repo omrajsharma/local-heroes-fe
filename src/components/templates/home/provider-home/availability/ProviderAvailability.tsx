@@ -16,8 +16,8 @@ import API_ENUM from '../../../../../enum/API_ENUM';
 const ProviderAvailability = () => {
     const today = dayjs();
     const [daysType, setDaysType] = useState("");
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState<Date | undefined>();
+    const [endDate, setEndDate] = useState<Date | undefined>();
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
 

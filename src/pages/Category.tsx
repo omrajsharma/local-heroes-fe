@@ -4,7 +4,7 @@ import Container from '../components/atoms/Container';
 import apiCall from '../utils/apiUtils';
 import API_ENUM from '../enum/API_ENUM';
 import { UserContext } from '../context/UserContext';
-import { Box, Button, Modal, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Modal, TextField, Tooltip, Typography } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
@@ -116,6 +116,16 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
     const [selectedDate, setSelectedDate] = useState();
     const [selectedStartTime, setSelectedStartTime] = useState("");
     const [selectedEndTime, setSelectedEndTime] = useState("");
+    const [clientAddress, setClientAddress] = useState({
+        addressLineOne: "",
+        addressLineTwo: "",
+        city: "",
+        state: "",
+        pincode: Number
+    });
+
+    console.log(clientAddress);
+    
 
 
     return (
@@ -215,7 +225,79 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
                                 </>
                             )}
                             {   bookingStep == 2 && (
-                                <div>step 2</div>
+                                <>
+                                    <Typography id="modal-modal-title" variant="h5" component="h2" fontWeight={500}>
+                                        Enter your address
+                                    </Typography>
+
+                                    <TextField
+                                        fullWidth
+                                        style={{ marginBottom: "10px" }}
+                                        type="text"
+                                        id="standard-basic"
+                                        label="Address Line One"
+                                        variant="standard"
+                                        value={clientAddress.addressLineOne}
+                                        onChange={(e:any) => setClientAddress({...clientAddress, addressLineOne: e.target.value})}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        style={{ marginBottom: "10px" }}
+                                        type="text"
+                                        id="standard-basic"
+                                        label="Address Line Two"
+                                        variant="standard"
+                                        value={clientAddress.addressLineTwo}
+                                        onChange={(e:any) => setClientAddress({...clientAddress, addressLineTwo: e.target.value})}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        style={{ marginBottom: "10px" }}
+                                        type="text"
+                                        id="standard-basic"
+                                        label="City"
+                                        variant="standard"
+                                        value={clientAddress.city}
+                                        onChange={(e:any) => setClientAddress({...clientAddress, city: e.target.value})}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        style={{ marginBottom: "10px" }}
+                                        type="text"
+                                        id="standard-basic"
+                                        label="State"
+                                        variant="standard"
+                                        value={clientAddress.state}
+                                        onChange={(e:any) => setClientAddress({...clientAddress, state: e.target.value})}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        style={{ marginBottom: "10px" }}
+                                        type="number"
+                                        id="standard-basic"
+                                        label="Pincode"
+                                        variant="standard"
+                                        value={clientAddress.pincode}
+                                        onChange={(e:any) => setClientAddress({...clientAddress, pincode: e.target.value})}
+                                    />
+
+                                    <Button 
+                                        variant='contained'
+                                        disabled={
+                                            clientAddress.addressLineOne == '' || 
+                                            clientAddress.addressLineTwo == '' ||
+                                            clientAddress.city == '' ||
+                                            clientAddress.state == '' 
+                                        }
+                                        onClick={() => setBookingStep(bookingStep + 1)}
+                                    >
+                                        Continue
+                                    </Button>
+                                </>
                             )}
                             
                         </div>)

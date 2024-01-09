@@ -12,7 +12,6 @@ const apiCall = async (
 
     try {
         if (params?.url) {
-            debugger
             const url = params.url + (query ? query : '');
             const response = await fetch(url, {
                 method: params.method,
