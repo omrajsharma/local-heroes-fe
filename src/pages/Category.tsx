@@ -4,7 +4,7 @@ import Container from '../components/atoms/Container';
 import apiCall from '../utils/apiUtils';
 import API_ENUM from '../enum/API_ENUM';
 import { UserContext } from '../context/UserContext';
-import { Box, Button, Modal, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Modal, Radio, RadioGroup, TextField, Tooltip, Typography } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
@@ -123,9 +123,7 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
         state: "",
         pincode: Number
     });
-
-    console.log(clientAddress);
-    
+    const [paymentMode, setPaymentMode] = useState("");
 
 
     return (
@@ -293,6 +291,32 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
                                             clientAddress.city == '' ||
                                             clientAddress.state == '' 
                                         }
+                                        onClick={() => setBookingStep(bookingStep + 1)}
+                                    >
+                                        Continue
+                                    </Button>
+                                </>
+                            )}
+                            {   bookingStep == 3 && (
+                                <>
+                                    <Typography id="modal-modal-title" variant="h5" component="h2" fontWeight={500}>
+                                        Select payment mode
+                                    </Typography>
+                                    <FormControl fullWidth>
+                                        <FormLabel id="demo-controlled-radio-buttons-group">Modes</FormLabel>
+                                        <RadioGroup
+                                            aria-labelledby="demo-controlled-radio-buttons-group"
+                                            name="controlled-radio-buttons-group"
+                                            value={paymentMode}
+                                            onChange={e => setPaymentMode(e.target.value)}
+                                        >
+                                            <FormControlLabel value="UPI" control={<Radio />} label="UPI" />
+                                            <FormControlLabel value="COD" control={<Radio />} label="At location" />
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <Button 
+                                        variant='contained'
+                                        disabled={paymentMode == ''}
                                         onClick={() => setBookingStep(bookingStep + 1)}
                                     >
                                         Continue
