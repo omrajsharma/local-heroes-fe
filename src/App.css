@@ -1,0 +1,11 @@
+.booking-details {
+    margin-top: 12px;
+}
+.booking-details-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.booking-details-row-key {
+    font-weight: 600;
+}

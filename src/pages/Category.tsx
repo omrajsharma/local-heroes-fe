@@ -105,14 +105,12 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const handleUserServiceSelection = () => {
-        handleOpen();
-    }
 
     const [showService, setShowService] = useState(false);
     const nameBgColor = colorPelette[idx % 5];
     const availabilityEndDate = availability?.endDate == undefined ? undefined : new Date(availability?.endDate);
     const [bookingStep, setBookingStep] = useState(1);
+    const [selectedService, setSelectedService] = useState<Service>()
     const [selectedDate, setSelectedDate] = useState();
     const [selectedStartTime, setSelectedStartTime] = useState("");
     const [selectedEndTime, setSelectedEndTime] = useState("");
@@ -121,10 +119,14 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
         addressLineTwo: "",
         city: "",
         state: "",
-        pincode: Number
+        pincode: 0
     });
     const [paymentMode, setPaymentMode] = useState("");
 
+    const handleUserServiceSelection = (service: any) => {
+        setSelectedService(service)
+        handleOpen();
+    }
 
     return (
         <div>
@@ -323,6 +325,39 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
                                     </Button>
                                 </>
                             )}
+                            {   bookingStep == 4 && (
+                                <>
+                                    <Typography id="modal-modal-title" variant="h5" component="h2" fontWeight={500}>
+                                        Billing Details
+                                    </Typography>
+
+                                    <div className='booking-details'>
+                                        <div className="booking-details-row">
+                                            <div className="booking-details-row-key">Service Type</div>
+                                            <div className="booking-details-row-value"> {selectedService?.title} </div>
+                                        </div>
+                                        <div className="booking-details-row">
+                                            <div className="booking-details-row-key">Date & Time</div>
+                                            <div className="booking-details-row-value"> {selectedDate?.format('YYYY-MM-DD')}, {selectedStartTime + ' - ' + selectedEndTime} </div>
+                                        </div>
+                                        <div className="booking-details-row">
+                                            <div className="booking-details-row-key">Address</div>
+                                            <div className="booking-details-row-value"> {clientAddress.addressLineOne}, {clientAddress.addressLineTwo}, {clientAddress.city}, {clientAddress.state}, {clientAddress.pincode} </div>
+                                        </div>
+                                        <div className="booking-details-row">
+                                            <div className="booking-details-row-key">Payment Mode</div>
+                                            <div className="booking-details-row-value"> {paymentMode} </div>
+                                        </div>
+                                    </div>
+
+                                    <Button 
+                                        variant='contained'
+                                        // onClick={() => setBookingStep(bookingStep + 1)}
+                                    >
+                                        BOOK
+                                    </Button>
+                                </>
+                            )}
                             
                         </div>)
                     }
@@ -345,7 +380,7 @@ const ServiceCard = ({ service, handleUserServiceSelection }: any) => {
             setNavigateState(!navigateState);
             return;
         }
-        handleUserServiceSelection();
+        handleUserServiceSelection(service);
     }
     
     return (
