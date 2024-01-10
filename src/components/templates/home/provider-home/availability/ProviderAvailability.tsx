@@ -63,7 +63,7 @@ const ProviderAvailability = () => {
 
                                 onChange={e => {
                                     setStartDate(dayjs(e[0]?.toDate()).toDate());
-                                    setEndDate(dayjs(e[1]?.toDate()).toDate());
+                                    setEndDate(e[1] == null ? undefined : dayjs(e[1]?.toDate()).toDate());
                                 }}
                             />
                         </DemoContainer>
