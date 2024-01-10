@@ -8,7 +8,7 @@ import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useState } from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Button } from '@mui/material';
 import apiCall from '../../../../../utils/apiUtils';
 import API_ENUM from '../../../../../enum/API_ENUM';
@@ -18,11 +18,8 @@ const ProviderAvailability = () => {
     const [daysType, setDaysType] = useState("");
     const [startDate, setStartDate] = useState<Date | undefined>();
     const [endDate, setEndDate] = useState<Date | undefined>();
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
-
-    console.log(startDate?.toDateString(), endDate?.toDateString());
-    
+    const [startTime, setStartTime] = useState<Dayjs | null>(null);
+    const [endTime, setEndTime] = useState<Dayjs | null>(null);
 
     const handleSubmit = async () => {
         const data = await apiCall(API_ENUM.PROVIDER_UPDATE_AVAILABILITY , 
@@ -30,10 +27,15 @@ const ProviderAvailability = () => {
                 daysType, 
                 startDate: startDate?.toDateString(), 
                 endDate : endDate?.toDateString(), 
-                startTime, 
-                endTime
+                startTime: dayjs(startTime).format('HH:mm'), 
+                endTime: dayjs(endTime).format('HH:mm')
             }
         )
+        setDaysType("")
+        setStartDate(undefined)
+        setEndDate(undefined)
+        setStartTime(null)
+        setEndTime(null)
     }
 
     return (
@@ -46,6 +48,7 @@ const ProviderAvailability = () => {
                     name="radio-buttons-group"
                     row
                     onChange={e => setDaysType(e.target.value)}
+                    value={daysType}
                 >
                     <FormControlLabel value="ALL_DAYS" control={<Radio />} label="All Days" />
                     <FormControlLabel value="DATE_RANGE" control={<Radio />} label="Select Days" />
@@ -59,9 +62,6 @@ const ProviderAvailability = () => {
                                 autoFocus
 
                                 onChange={e => {
-                                    console.log(dayjs(e[0]?.toDate()).toDate());
-                                    console.log(dayjs(e[1]?.toDate()).toDate());
-                                    
                                     setStartDate(dayjs(e[0]?.toDate()).toDate());
                                     setEndDate(dayjs(e[1]?.toDate()).toDate());
                                 }}
@@ -74,23 +74,21 @@ const ProviderAvailability = () => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['TimePicker']}>
                             <TimePicker 
+                            value={startTime}
                             label="Start Time" 
                             onChange={(newTime) => {
-                                // Format the selected time in 24-hour format
-                                const formattedTime = dayjs(newTime).format('HH:mm');
-                                setStartTime(formattedTime)
+                                setStartTime(newTime);
                             }}/>
                         </DemoContainer>
                     </LocalizationProvider>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['TimePicker']}>
                             <TimePicker 
+                            value={endTime}
                             label="End Time"
-                            disabled={startTime == "" ? true : false}
+                            disabled={startTime == null ? true : false}
                             onChange={(newTime) => {
-                                // Format the selected time in 24-hour format
-                                const formattedTime = dayjs(newTime).format('HH:mm');
-                                setEndTime(formattedTime)
+                                setEndTime(newTime);
                             }}
                             />
                         </DemoContainer>
