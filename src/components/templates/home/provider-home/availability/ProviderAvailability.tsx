@@ -21,8 +21,19 @@ const ProviderAvailability = () => {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
 
+    console.log(startDate?.toDateString(), endDate?.toDateString());
+    
+
     const handleSubmit = async () => {
-        const data = await apiCall(API_ENUM.PROVIDER_UPDATE_AVAILABILITY , {daysType, startDate, endDate, startTime, endTime})
+        const data = await apiCall(API_ENUM.PROVIDER_UPDATE_AVAILABILITY , 
+            {   
+                daysType, 
+                startDate: startDate?.toDateString(), 
+                endDate : endDate?.toDateString(), 
+                startTime, 
+                endTime
+            }
+        )
     }
 
     return (
@@ -46,9 +57,13 @@ const ProviderAvailability = () => {
                                 localeText={{ start: 'Start Date', end: 'End Date' }}
                                 minDate={today}
                                 autoFocus
+
                                 onChange={e => {
-                                    setStartDate(dayjs(e[0]?.toDate()).toDate())
-                                    setEndDate(dayjs(e[1]?.toDate()).toDate())
+                                    console.log(dayjs(e[0]?.toDate()).toDate());
+                                    console.log(dayjs(e[1]?.toDate()).toDate());
+                                    
+                                    setStartDate(dayjs(e[0]?.toDate()).toDate());
+                                    setEndDate(dayjs(e[1]?.toDate()).toDate());
                                 }}
                             />
                         </DemoContainer>
