@@ -44,6 +44,7 @@ interface Availability {
   }
   
   interface Service {
+    _id: string;
     category: string;
     description: string;
     price: number;
@@ -90,6 +91,7 @@ const Category = () => {
                     <ProviderCard 
                         key={idx} 
                         idx={idx} 
+                        providerId={provider._id}
                         name={provider.name} 
                         phoneNumber={provider.phone} 
                         services={provider.services}
@@ -101,7 +103,7 @@ const Category = () => {
   )
 }
 
-const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => {
+const ProviderCard = ({idx, providerId, name, phoneNumber, services, availability}: any) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -126,6 +128,23 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
     const handleUserServiceSelection = (service: any) => {
         setSelectedService(service)
         handleOpen();
+    }
+
+    const handleBookService = async () => {
+        const response = await apiCall(API_ENUM.CLIENT_SERVICE_BOOKING, {
+            providerId: providerId,
+            providerServiceId: selectedService?._id,
+            address: clientAddress.addressLineOne + ',' + clientAddress.addressLineTwo + ',' + clientAddress.city + ',' + clientAddress.state + ',' + clientAddress.pincode,
+            date: selectedDate?.toString(),
+            startTime: selectedStartTime,
+            endTime: selectedEndTime,
+            paymentMode: paymentMode,
+        })
+
+        // empty the existing state
+        if (response?.success) {
+
+        }
     }
 
     return (
@@ -312,7 +331,7 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
                                             value={paymentMode}
                                             onChange={e => setPaymentMode(e.target.value)}
                                         >
-                                            <FormControlLabel value="UPI" control={<Radio />} label="UPI" />
+                                            <FormControlLabel value="UPI" control={<Radio />} label="UPI" disabled />
                                             <FormControlLabel value="COD" control={<Radio />} label="At location" />
                                         </RadioGroup>
                                     </FormControl>
@@ -352,7 +371,8 @@ const ProviderCard = ({idx, name, phoneNumber, services, availability}: any) => 
 
                                     <Button 
                                         variant='contained'
-                                        // onClick={() => setBookingStep(bookingStep + 1)}
+                                        disabled={paymentMode == ""}
+                                        onClick={handleBookService}
                                     >
                                         BOOK
                                     </Button>

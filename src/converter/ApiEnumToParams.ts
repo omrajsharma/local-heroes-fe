@@ -68,6 +68,16 @@ const ApiEnumToParams = (apiEnum: API_ENUM) => {
             credentials: 'include'
         }
         return params
+    } else if(apiEnum == API_ENUM.CLIENT_SERVICE_BOOKING) {
+        let params : ApiParams = {
+            method: "POST",
+            url: `${import.meta.env.VITE_BASE_URL}/api/v1/client/booking`,
+            header: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            credentials: 'include'
+        }
+        return params
     }
 }
 
