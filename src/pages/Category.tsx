@@ -135,7 +135,7 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
             providerId: providerId,
             providerServiceId: selectedService?._id,
             address: clientAddress.addressLineOne + ',' + clientAddress.addressLineTwo + ',' + clientAddress.city + ',' + clientAddress.state + ',' + clientAddress.pincode,
-            date: selectedDate?.toString(),
+            date: (selectedDate?.date() + "/" + selectedDate?.month()+1 + "/" + selectedDate?.year()),
             startTime: selectedStartTime,
             endTime: selectedEndTime,
             paymentMode: paymentMode,
