@@ -1,6 +1,8 @@
 import { Button, Card } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./ProviderRequest.css";
+import apiCall from "../../../../../utils/apiUtils";
+import API_ENUM from "../../../../../enum/API_ENUM";
 
 const tabs = ["ALL", "IN_PROGRESS", "COMPLETED", "CANCELLED"];
 
@@ -19,18 +21,30 @@ const ProviderRequest = () => {
                     </Button>
                 ))}
             </div>
-            
-            <ProviderRequestCard
-                userImg="https://omrajsharma.github.io/assets/images/omraj-sharma.png"
-                name="Omraj Sharma"
-                phone="1234567890"
-                status="Active"
-                serviceType="Learning"
-                dateTime="Nov 25, 8:00 AM"
-                address="New Delhi, Delhi"
-            />
+
+            <RequestList selectedTabIndex={selectedTabIndex} />
         </div>
     );
+}
+
+const RequestList = ({selectedTabIndex}: any) => {
+    const [requestList, setRequestList] = useState<any[]>([]);
+
+    useEffect(() => {
+        apiCall(API_ENUM.PROVIDER_GET_REQUEST, undefined, `?status=${tabs[selectedTabIndex]}`)
+        .then(response => {
+            setRequestList(response?.data)
+        })
+    }, [selectedTabIndex])
+
+    console.log('requestList', requestList);
+    
+    
+    return (
+        <div>
+            <h1>REQUEST LIST</h1>
+        </div>
+    )
 }
 
 const ProviderRequestCard = ({
