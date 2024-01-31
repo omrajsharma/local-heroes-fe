@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import Container from "../components/atoms/Container";
-import axios from "axios";
 import apiCall from "../utils/apiUtils";
 import API_ENUM from "../enum/API_ENUM";
 

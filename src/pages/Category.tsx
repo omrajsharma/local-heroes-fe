@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Container from '../components/atoms/Container';
 import apiCall from '../utils/apiUtils';
 import API_ENUM from '../enum/API_ENUM';
@@ -110,10 +110,10 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
 
     const [showService, setShowService] = useState(false);
     const nameBgColor = colorPelette[idx % 5];
-    const availabilityEndDate = availability?.endDate == undefined ? undefined : new Date(availability?.endDate);
+    // const availabilityEndDate = availability?.endDate == undefined ? undefined : new Date(availability?.endDate);
     const [bookingStep, setBookingStep] = useState(1);
     const [selectedService, setSelectedService] = useState<Service>()
-    const [selectedDate, setSelectedDate] = useState();
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedStartTime, setSelectedStartTime] = useState("");
     const [selectedEndTime, setSelectedEndTime] = useState("");
     const [clientAddress, setClientAddress] = useState({
@@ -135,7 +135,7 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
             providerId: providerId,
             providerServiceId: selectedService?._id,
             address: clientAddress.addressLineOne + ',' + clientAddress.addressLineTwo + ',' + clientAddress.city + ',' + clientAddress.state + ',' + clientAddress.pincode,
-            date: (selectedDate?.date() + "/" + selectedDate?.month()+1 + "/" + selectedDate?.year()),
+            date: (selectedDate ? `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}` : ''),
             startTime: selectedStartTime,
             endTime: selectedEndTime,
             paymentMode: paymentMode,
@@ -204,7 +204,6 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DatePicker 
                                                 disablePast
-                                                // maxDate={}
                                                 value={selectedDate}
                                                 onChange={e => setSelectedDate(e)}
                                             />
@@ -213,22 +212,24 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
                                             <DemoContainer components={['TimePicker']}>
                                                 <TimePicker 
                                                 label="Start Time" 
-                                                onChange={(newTime) => {
-                                                    // Format the selected time in 24-hour format
-                                                    const formattedTime = dayjs(newTime).format('HH:mm');
-                                                    setSelectedStartTime(formattedTime)
-                                                }}/>
+                                                onChange={(newTime: Date | null) => {
+                                                    if (newTime) {
+                                                        const formattedTime = dayjs(newTime).format('HH:mm');
+                                                        setSelectedStartTime(formattedTime);
+                                                    }
+                                                }}
+                                                />
                                             </DemoContainer>
                                         </LocalizationProvider>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DemoContainer components={['TimePicker']}>
                                                 <TimePicker 
                                                 label="End Time"
-                                                // disabled={startTime == "" ? true : false}
-                                                onChange={(newTime) => {
-                                                    // Format the selected time in 24-hour format
-                                                    const formattedTime = dayjs(newTime).format('HH:mm');
-                                                    setSelectedEndTime(formattedTime)
+                                                onChange={(newTime: Date | null) => {
+                                                    if (newTime) {
+                                                        const formattedTime = dayjs(newTime).format('HH:mm');
+                                                        setSelectedEndTime(formattedTime);
+                                                    }
                                                 }}
                                                 />
                                             </DemoContainer>
@@ -357,7 +358,7 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
                                         </div>
                                         <div className="booking-details-row">
                                             <div className="booking-details-row-key">Date & Time</div>
-                                            <div className="booking-details-row-value"> {selectedDate?.format('YYYY-MM-DD')}, {selectedStartTime + ' - ' + selectedEndTime} </div>
+                                            <div className="booking-details-row-value"> {selectedDate ? dayjs(selectedDate).format('YYYY-MM-DD') : ''}, {selectedStartTime + ' - ' + selectedEndTime} </div>
                                         </div>
                                         <div className="booking-details-row">
                                             <div className="booking-details-row-key">Address</div>
@@ -388,7 +389,7 @@ const ProviderCard = ({idx, providerId, name, phoneNumber, services, availabilit
 }
 
 const ServiceCard = ({ service, handleUserServiceSelection }: any) => {
-    const { userInfo, setUserInfo } = useContext(UserContext);
+    const { userInfo } = useContext(UserContext);
     const [navigateState, setNavigateState] = useState(false);
     const navigate = useNavigate();
 

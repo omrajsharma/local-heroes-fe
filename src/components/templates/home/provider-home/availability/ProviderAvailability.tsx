@@ -22,7 +22,7 @@ const ProviderAvailability = () => {
     const [endTime, setEndTime] = useState<Dayjs | null>(null);
 
     const handleSubmit = async () => {
-        const data = await apiCall(API_ENUM.PROVIDER_UPDATE_AVAILABILITY , 
+        await apiCall(API_ENUM.PROVIDER_UPDATE_AVAILABILITY , 
             {   
                 daysType, 
                 startDate: startDate?.toDateString(), 
